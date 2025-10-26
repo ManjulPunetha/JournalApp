@@ -1,0 +1,7 @@
+SELECT sequence_name FROM user_sequences;
+
+CREATE SEQUENCE JOURNAL_SEQ 
+    START WITH 1 
+    INCREMENT BY 1 
+    NOCACHE;
+
