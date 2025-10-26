@@ -1,5 +1,6 @@
 package net.engineeringdigest.journalApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,5 +27,6 @@ public class JournalEntry
     // Many Journal Entries belong to one User
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)  // Foreign Key in journal_entries pointing to users.id
+    @JsonBackReference
     private User user;
 }

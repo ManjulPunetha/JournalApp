@@ -40,6 +40,19 @@ public class JournalEntryController
         }
     }
 
+    @GetMapping("/getAll/{userName}")
+    public ResponseEntity<List<JournalEntry>> getAllJournalEntryByUser(@PathVariable String userName) {
+        List<JournalEntry> allJournals = userService.getUserByName(userName).getJournalEntries();
+        if (!allJournals.isEmpty())
+        {
+            return new ResponseEntity<>(allJournals, HttpStatus.OK);
+        }
+        else
+        {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping("/{ID}")
     public ResponseEntity<JournalEntry> getById(@PathVariable(name = "ID") int id) {

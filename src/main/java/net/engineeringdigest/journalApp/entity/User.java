@@ -1,5 +1,6 @@
 package net.engineeringdigest.journalApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,6 @@ public class User
             cascade = CascadeType.ALL,   // Cascade all DB actions (insert, update, delete) to child
             orphanRemoval = true         // Remove child if parent no longer references it
     )
+    @JsonManagedReference
     private List<JournalEntry> journalEntries;
 }
