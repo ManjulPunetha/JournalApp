@@ -1,11 +1,14 @@
 package net.engineeringdigest.journalApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.management.relation.Role;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -27,9 +30,11 @@ public class User
 
     // JPA Mapping: One User has many JournalEntries
     @OneToMany(mappedBy = "user",           // "user" is the field in JournalEntry class
-            cascade = CascadeType.ALL,   // Cascade all DB actions (insert, update, delete) to child
+            cascade = CascadeType.DETACH,   // Cascade all DB actions (insert, update, delete) to child
             orphanRemoval = true         // Remove child if parent no longer references it
     )
     @JsonManagedReference
     private List<JournalEntry> journalEntries;
+
+    private List<Role> roles = new ArrayList<>();
 }
