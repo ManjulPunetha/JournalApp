@@ -34,6 +34,7 @@ public class SpringSecurity
                 .permitAll()
                 .and()
                 .httpBasic(Customizer.withDefaults())
+                .authenticationProvider(authenticationProvider())
                 .build();
     }
 

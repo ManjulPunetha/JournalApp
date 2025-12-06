@@ -36,5 +36,11 @@ public class User
     @JsonManagedReference
     private List<JournalEntry> journalEntries;
 
-    private List<Role> roles = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER) //creates a separate table where each row represents an element of the list.
+    @CollectionTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id")
+    )                                            //Store the elements of this list in a separate table called user_roles.
+    @Column(name = "role")
+    private List<String> roles;
 }
