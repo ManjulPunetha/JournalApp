@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService
         User user = userRepository.findByUsername(username);
         if (user != null)
         {
-            org.springframework.security.core.userdetails.User.builder()
+            return org.springframework.security.core.userdetails.User.builder()
                     .username(username)
                     .password(user.getPassword())
                     .roles(String.valueOf(user.getRoles()))
