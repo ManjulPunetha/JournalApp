@@ -4,7 +4,6 @@ import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,14 +34,9 @@ public class UserService
         if (user != null)
         {
             user.setUsername(updated.getUsername());
-            user.setPassword(updated.getPassword());
+            user.setPassword(passwordEncoder.encode(updated.getPassword()));
             return userRepository.save(user);
         }
         return null;
-    }
-
-    public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
     }
 }
