@@ -73,7 +73,10 @@ public class JournalEntryController
 
     @PutMapping("/{ID}")
     public ResponseEntity<?> updateJournalEntry(@PathVariable(name = "ID") int id, @RequestBody JournalEntry newJournalEntry) {
-        JournalEntry journalEntry = journalEntryService.updateJournalEntry(id, newJournalEntry);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        JournalEntry journalEntry = journalEntryService.updateJournalEntry(id, newJournalEntry, userName);
         return (journalEntry != null) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

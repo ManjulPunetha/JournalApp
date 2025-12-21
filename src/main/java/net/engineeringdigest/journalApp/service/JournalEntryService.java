@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class JournalEntryService
@@ -78,21 +79,29 @@ public class JournalEntryService
         return false;
     }
 
-    public JournalEntry updateJournalEntry(int id, JournalEntry newJournalEntry) {
-        JournalEntry oldEntry = findJournalEntryById(id).orElse(null);
-        if (oldEntry != null)
-        {
-            if (!newJournalEntry.getTitle().equals(oldEntry.getTitle()))
-            {
-                oldEntry.setTitle(newJournalEntry.getTitle());
-            }
-            if (!newJournalEntry.getContent().equals(oldEntry.getContent()))
-            {
-                oldEntry.setContent(newJournalEntry.getContent());
-            }
+    public JournalEntry updateJournalEntry(int id, JournalEntry newJournalEntry, String userName) {
+        JournalEntry oldEntry = null;
+        User user = userService.getUserByName(userName);
+        boolean isOwner = user.getJournalEntries().stream().anyMatch(x -> x.getId() == id);
 
-            oldEntry.setDate(LocalDateTime.now());
-            journalEntryRepository.save(oldEntry);
+        if (isOwner)
+        {
+            Optional<JournalEntry> journalEntryById = findJournalEntryById(id);
+            if (journalEntryById.isPresent())
+            {
+                oldEntry = journalEntryById.get();
+                if (!newJournalEntry.getTitle().equals(oldEntry.getTitle()))
+                {
+                    oldEntry.setTitle(newJournalEntry.getTitle());
+                }
+                if (!newJournalEntry.getContent().equals(oldEntry.getContent()))
+                {
+                    oldEntry.setContent(newJournalEntry.getContent());
+                }
+
+                oldEntry.setDate(LocalDateTime.now());
+                journalEntryRepository.save(oldEntry);
+            }
         }
 
         return oldEntry;
