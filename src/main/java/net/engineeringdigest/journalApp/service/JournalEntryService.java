@@ -22,6 +22,9 @@ public class JournalEntryService
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     /**
      * Saves a new journal entry.
      *
@@ -29,8 +32,13 @@ public class JournalEntryService
      * @return The saved entry.
      */
     @Transactional // 2. Add transactional annotation for write operations
-    public JournalEntry saveNewEntry(@NonNull JournalEntry journalEntry) {
+    public JournalEntry saveNewEntry(@NonNull JournalEntry journalEntry, String userName) {
         journalEntry.setDate(LocalDateTime.now());
+        journalEntryRepository.save(journalEntry);
+
+        User user = userService.getUserByName(userName);
+        user.getJournalEntries().add(journalEntry);
+
         return journalEntryRepository.save(journalEntry);
     }
 
@@ -84,19 +92,9 @@ public class JournalEntryService
             }
 
             oldEntry.setDate(LocalDateTime.now());
-            saveNewEntry(oldEntry);
+            journalEntryRepository.save(oldEntry);
         }
 
         return oldEntry;
-    }
-
-    List<JournalEntry> getAllJournalEntriesOfUser(String userName) {
-        User user = userRepository.findByUsername(userName);
-        if (user != null)
-        {
-            return user.getJournalEntries();
-        }
-
-        return null;
     }
 }

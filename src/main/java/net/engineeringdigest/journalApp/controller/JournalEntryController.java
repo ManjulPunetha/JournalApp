@@ -1,11 +1,15 @@
 package net.engineeringdigest.journalApp.controller;
 
 import net.engineeringdigest.journalApp.entity.JournalEntry;
+import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.service.JournalEntryService;
 import net.engineeringdigest.journalApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,26 +26,21 @@ public class JournalEntryController
 
     @PostMapping
     public ResponseEntity<?> createEntry(@RequestBody JournalEntry journalEntry) {
-        journalEntryService.saveNewEntry(journalEntry);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        journalEntryService.saveNewEntry(journalEntry,userName);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<JournalEntry>> getAllJournalEntry() {
-        List<JournalEntry> allJournals = journalEntryService.getAllJournalEntries();
-        if (!allJournals.isEmpty())
-        {
-            return new ResponseEntity<>(allJournals, HttpStatus.OK);
-        }
-        else
-        {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+    @GetMapping
+    public ResponseEntity<List<JournalEntry>> getAllJournalEntryByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
 
-    @GetMapping("/getAll/{userName}")
-    public ResponseEntity<List<JournalEntry>> getAllJournalEntryByUser(@PathVariable String userName) {
-        List<JournalEntry> allJournals = userService.getUserByName(userName).getJournalEntries();
+        User user = userService.getUserByName(userName);
+
+        List<JournalEntry> allJournals = user.getJournalEntries();
         if (!allJournals.isEmpty())
         {
             return new ResponseEntity<>(allJournals, HttpStatus.OK);
