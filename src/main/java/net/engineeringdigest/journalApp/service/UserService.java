@@ -29,14 +29,7 @@ public class UserService
         return userRepository.findByUsername(username);
     }
 
-    public User updateUser(String username, User updated) {
-        User user = userRepository.findByUsername(username);
-        if (user != null)
-        {
-            user.setUsername(updated.getUsername());
-            user.setPassword(passwordEncoder.encode(updated.getPassword()));
-            return userRepository.save(user);
-        }
-        return null;
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 }
