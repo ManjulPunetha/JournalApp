@@ -27,9 +27,9 @@ public class SpringSecurity
         return http
                 .authorizeHttpRequests()
                 .requestMatchers(new AntPathRequestMatcher("/journal/**"),
-                        new AntPathRequestMatcher("/users/", "PUT"),
-                        new AntPathRequestMatcher("/users/", "POST"))
+                        new AntPathRequestMatcher("/users/", "PUT"))
                 .authenticated()
+                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic(Customizer.withDefaults())
