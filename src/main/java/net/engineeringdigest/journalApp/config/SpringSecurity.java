@@ -29,7 +29,7 @@ public class SpringSecurity
                 .requestMatchers(new AntPathRequestMatcher("/journal/**"),
                         new AntPathRequestMatcher("/users/", "PUT"))
                 .authenticated()
-                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic(Customizer.withDefaults())
