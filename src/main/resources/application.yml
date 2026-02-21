@@ -5,7 +5,7 @@ spring:
   application:
     name: JournalApp
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:xe
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
     username: Journal
     password: password
     driver-class-name: oracle.jdbc.OracleDriver
@@ -22,3 +22,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+weather:
+  api:
+    key: 2ab68e81f9cb41e5b2f140023262102
