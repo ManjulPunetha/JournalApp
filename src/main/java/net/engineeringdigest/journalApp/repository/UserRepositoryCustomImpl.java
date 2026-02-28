@@ -24,11 +24,10 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
         // Build conditions (Predicates)
         Predicate emailExists = cb.isNotNull(root.get("email"));
-        Predicate emailNotEmpty = cb.notEqual(root.get("email"), "");
         Predicate sentimentTrue = cb.equal(root.get("sentimentAnalysis"), true);
 
         // Combine with AND
-        query.where(cb.and(emailExists, emailNotEmpty, sentimentTrue));
+        query.where(cb.and(emailExists, sentimentTrue));
 
         return entityManager.createQuery(query).getResultList();
     }

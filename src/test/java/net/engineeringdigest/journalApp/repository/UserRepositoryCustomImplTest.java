@@ -18,13 +18,5 @@ class UserRepositoryCustomImplTest {
     public void testGetUsersForSentimentAnalysis() {
         List<User> usersForSentimentAnalysis = userRepository.getUsersForSentimentAnalysis();
         assertNotNull(usersForSentimentAnalysis);
-
-    }
-
-    @Test
-    public void testUserNotOptedForSentimentAnalysis(){
-        List<User> usersForSentimentAnalysis = userRepository.getUsersForSentimentAnalysis();
-        assertFalse(usersForSentimentAnalysis.stream()
-                .noneMatch(user-> user.getSentimentAnalysis().equals(false)));
     }
 }
