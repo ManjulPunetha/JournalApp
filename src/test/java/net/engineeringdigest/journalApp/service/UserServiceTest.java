@@ -39,6 +39,6 @@ class UserServiceTest
 
     @Test
     void getAllUsers() {
-        assertEquals(userRepository.findAll().size(), 2, "Total Users");
+        assertEquals(2, userRepository.findAll().size(), "Total Users");
     }
 }

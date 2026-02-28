@@ -10,14 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-public class UserController
-{
+public class UserController {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -42,9 +42,26 @@ public class UserController
         String userName = authentication.getName();
 
         User userInDb = userService.getUserByName(userName);
-        userInDb.setUsername(user.getUsername());
-        userInDb.setPassword(passwordEncoder.encode(user.getPassword()));
-        userInDb.setRoles(user.getRoles());
+
+        if (StringUtils.hasLength(user.getUsername())) {
+            userInDb.setUsername(user.getUsername());
+        }
+
+        if (StringUtils.hasLength(user.getPassword())) {
+            userInDb.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            userInDb.setRoles(user.getRoles());
+        }
+
+        if (StringUtils.hasLength(user.getEmail())) {
+            userInDb.setEmail(user.getEmail());
+        }
+
+        if (user.getSentimentAnalysis() != null) {
+            userInDb.setSentimentAnalysis(user.getSentimentAnalysis());
+        }
 
         userService.saveUser(userInDb);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
