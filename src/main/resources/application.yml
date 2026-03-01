@@ -20,7 +20,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: lukedannynuka@gmail.com  #sender
-    password: mdtv yqaq dbek yjkm    # NOT your personal Gmail password
+    password: ####    # NOT your personal Gmail password
     properties:
       mail:
         smtp:
