@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class WeatherService
-{
+public class WeatherService {
     @Value("${weather.api.key}")
     private static final String API_KEY = "2ab68e81f9cb41e5b2f140023262102";
 
@@ -20,13 +19,26 @@ public class WeatherService
 
     @Autowired
     private AppCache appCache;
+    @Autowired
+    private RedisService redisService;
 
     public WeatherResponse getWeather(String city) {
+        String cache = "weather_of" + city;
+
+        WeatherResponse cachedResponse = redisService.get(cache, WeatherResponse.class);
+        if (cachedResponse != null) {
+            return cachedResponse;
+        }
+
         String uri = appCache.cache.get("API_URI").replace("<API_KEY>", API_KEY)
                 .replace("<city>", city);
         ResponseEntity<WeatherResponse> response = restTemplate
                 .exchange(uri, HttpMethod.GET, null, WeatherResponse.class);
+        WeatherResponse weatherResponse = response.getBody();
+        if (weatherResponse != null) {
+            redisService.set(cache, weatherResponse, 60L);
+        }
 
-        return response.getBody();
+        return weatherResponse;
     }
 }
